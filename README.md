@@ -20,4 +20,5 @@ Here's a demonstration of how Kitzurit looks:
 
 ## Getting Started
 
-To start using Kitzurit, simply visit the website at [[https://kitzurit.com](https://abduznik.github.io/Kitzurit/)]([https://kitzurit.com](https://abduznik.github.io/Kitzurit/)). No installation or setup is required; you can start creating shortcuts, bookmarks, and performing searches right away.
+To start using Kitzurit, simply visit the website at [https://github.com/abduznik/Kitzurit/deployments/github-pages](https://github.com/abduznik/Kitzurit/deployments/github-pages). No installation or setup is required; you can start creating shortcuts, bookmarks, and performing searches right away.
+
