@@ -20,12 +20,4 @@ Here's a demonstration of how Kitzurit looks:
 
 ## Getting Started
 
-To start using Kitzurit, simply visit the website at [https://kitzurit.com](https://kitzurit.com). No installation or setup is required; you can start creating shortcuts, bookmarks, and performing searches right away.
-
-## Contributing
-
-Contributions to Kitzurit are welcome! If you have any ideas, bug reports, or feature requests, please open an issue on the [GitHub repository](https://github.com/your-username/kitzurit).
-
-## License
-
-Kitzurit is released under the [MIT License](https://opensource.org/licenses/MIT).
+To start using Kitzurit, simply visit the website at [[https://kitzurit.com](https://abduznik.github.io/Kitzurit/)]([https://kitzurit.com](https://abduznik.github.io/Kitzurit/)). No installation or setup is required; you can start creating shortcuts, bookmarks, and performing searches right away.
