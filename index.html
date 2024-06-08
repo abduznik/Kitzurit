@@ -99,7 +99,7 @@
         font-size: 28px; /* Larger font size */
         margin-right: 10px;
     }
-    .add-button, .reset-button, .search-button {
+    .add-button, .reset-button, .save-button, .load-button, .search-button {
         background-color: #4CAF50;
         border: none;
         color: white;
@@ -121,9 +121,65 @@
     .search-button:hover {
         background-color: #0056b3;
     }
+    .burger-menu {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        cursor: pointer;
+        z-index: 2;
+    }
+    .burger-menu div {
+        width: 35px;
+        height: 5px;
+        background-color: #fff;
+        margin: 6px 0;
+    }
+    .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #333;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    .sidebar a {
+        padding: 10px 15px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+    .sidebar a:hover {
+        color: #f1f1f1;
+    }
+    .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
 </style>
 </head>
 <body>
+<div class="burger-menu" onclick="toggleSidebar()">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+<div id="sidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar()">&times;</a>
+    <a href="#" onclick="saveToFile()">Save</a>
+    <a href="#" onclick="document.getElementById('fileInput').click()">Load</a>
+    <input type="file" id="fileInput" style="display: none;" onchange="loadFromFile(event)">
+</div>
+
 <div class="container" id="container"></div>
 
 <!-- Modal for adding bookmarks -->
@@ -139,7 +195,7 @@
 </div>
 
 <div class="action-buttons">
-    <div style="display: flex;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
         <button class="add-button" id="addShortcutBtn">Add Bookmark</button>
         <button class="reset-button" onclick="resetBookmarks()">Reset</button>
     </div>
@@ -252,6 +308,44 @@ function handleSearch(event) {
     }
 }
 
+function saveToFile() {
+    const blob = new Blob([JSON.stringify(shortcuts, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bookmarks.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function loadFromFile(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                shortcuts = Array.isArray(data) ? data : [];
+                saveShortcuts();
+                renderShortcuts();
+            } catch (err) {
+                alert('Failed to load bookmarks: Invalid file format.');
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.style.width === '250px') {
+        sidebar.style.width = '0';
+    } else {
+        sidebar.style.width = '250px';
+    }
+}
+
 window.onload = () => {
     renderShortcuts();
 
@@ -273,3 +367,4 @@ window.onload = () => {
 </script>
 </body>
 </html>
+
