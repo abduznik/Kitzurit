@@ -19,18 +19,19 @@
     }
     .container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Horizontal auto-scaling */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 10px;
         padding: 10px;
-        border: 2px solid #ccc; /* Site border */
+        border: 2px solid #ccc;
         border-radius: 10px;
         background-color: #444;
-        max-width: 90vw; /* Limit maximum width */
-        max-height: 90vh; /* Limit maximum height */
-        overflow: auto; /* Enable scrolling if needed */
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: auto;
     }
     .shortcut {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         border: 1px solid #ccc;
@@ -40,10 +41,15 @@
         user-select: none;
         margin-bottom: 10px;
         background-color: #555;
+        transition: transform 0.2s;
+    }
+    .shortcut:hover {
+        transform: scale(1.05);
     }
     .shortcut img {
         max-width: 100px;
         max-height: 100px;
+        margin-bottom: 5px;
     }
     .modal {
         display: none;
@@ -87,36 +93,33 @@
         align-items: center;
     }
     .search-input, .add-input {
-        padding: 15px; /* Larger padding */
+        padding: 15px;
         border-radius: 5px;
         border: 1px solid #ccc;
         background-color: #fff;
-        font-size: 24px; /* Larger font size */
+        font-size: 24px;
         margin-right: 10px;
-        flex: 1; /* Take remaining space */
+        flex: 1;
     }
     .search-engines select, .search-engines label {
-        font-size: 28px; /* Larger font size */
+        font-size: 28px;
         margin-right: 10px;
     }
-    .add-button, .reset-button, .save-button, .load-button, .search-button {
+    .add-button, .search-button {
         background-color: #4CAF50;
         border: none;
         color: white;
-        padding: 8px 50px; /* Larger padding */
+        padding: 15px 20px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 28px; /* Larger font size */
+        font-size: 28px;
         margin: 10px;
         cursor: pointer;
         border-radius: 7px;
-        width: 100%; /* Full width */
     }
     .search-button {
         background-color: #007bff;
-        padding: 15px 15px; /* Smaller padding */
-        font-size: 20px; /* Larger font size */
     }
     .search-button:hover {
         background-color: #0056b3;
@@ -177,6 +180,7 @@
     <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar()">&times;</a>
     <a href="#" onclick="saveToFile()">Save</a>
     <a href="#" onclick="document.getElementById('fileInput').click()">Load</a>
+    <a href="#" onclick="resetBookmarks()">Reset</a>
     <input type="file" id="fileInput" style="display: none;" onchange="loadFromFile(event)">
 </div>
 
@@ -197,7 +201,6 @@
 <div class="action-buttons">
     <div style="display: flex; flex-wrap: wrap; justify-content: center;">
         <button class="add-button" id="addShortcutBtn">Add Bookmark</button>
-        <button class="reset-button" onclick="resetBookmarks()">Reset</button>
     </div>
 </div>
 
@@ -229,7 +232,7 @@ function renderShortcuts() {
     shortcuts.forEach((shortcut, index) => {
         const div = document.createElement('div');
         div.classList.add('shortcut');
-        div.style.width = '150px'; // Initial width
+        div.style.width = '150px';
         div.innerHTML = `
             <img src="${shortcut.icon}" alt="${shortcut.title}">
             <span>${shortcut.title}</span>
