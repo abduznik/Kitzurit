@@ -182,7 +182,135 @@ function handleSearch(event) {
         search();
     }
 }
+function renderShortcuts() {
+    const container = document.getElementById('container');
+    container.innerHTML = '';
+    shortcuts.forEach((shortcut, index) => {
+        const div = document.createElement('div');
+        div.classList.add('shortcut');
+        div.style.display = 'flex';
+        div.style.alignItems = 'center';
+        div.style.border = '2px solid #ffffff';
+        div.style.padding = '10px';
+        div.style.margin = '10px 0';
+        div.style.backgroundColor = '#333333';
+        div.style.cursor = 'pointer';
 
+        const favicon = document.createElement('img');
+        favicon.src = `https://www.google.com/s2/favicons?domain=${shortcut.url}`;
+        favicon.alt = 'favicon';
+        favicon.style.width = '24px';
+        favicon.style.height = '24px';
+        favicon.style.marginRight = '10px';
+
+        const title = document.createElement('span');
+        title.textContent = shortcut.title;
+        title.style.flexGrow = '1';
+
+        div.appendChild(favicon);
+        div.appendChild(title);
+
+        div.onclick = () => {
+            window.open(shortcut.url, '_blank');
+        };
+
+        div.oncontextmenu = (e) => {
+            e.preventDefault();
+            deleteShortcut(index);
+        };
+
+        container.appendChild(div);
+    });
+}
+
+function exportBookmarks() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(shortcuts));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "bookmarks.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    document.body.removeChild(downloadAnchor);
+}
+
+function importBookmarks(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedShortcuts = JSON.parse(e.target.result);
+                shortcuts = importedShortcuts;
+                saveShortcuts();
+                renderShortcuts();
+            } catch (error) {
+                alert('Invalid file format');
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+window.onload = () => {
+    renderShortcuts();
+
+    document.getElementById('addShortcutBtn').onclick = () => {
+        document.getElementById('myModal').style.display = 'block';
+    };
+
+    document.getElementsByClassName('close')[0].onclick = () => {
+        closeModal();
+    };
+
+    window.onclick = (event) => {
+        const modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    const menu = document.createElement('div');
+    menu.style.position = 'absolute';
+    menu.style.top = '10px';
+    menu.style.right = '10px';
+
+    const hamburger = document.createElement('button');
+    hamburger.textContent = '☰';
+    hamburger.style.fontSize = '24px';
+    hamburger.style.backgroundColor = '#333333';
+    hamburger.style.color = '#ffffff';
+    hamburger.style.border = 'none';
+    hamburger.style.cursor = 'pointer';
+
+    const menuOptions = document.createElement('div');
+    menuOptions.style.display = 'none';
+    menuOptions.style.flexDirection = 'column';
+    menuOptions.style.backgroundColor = '#333333';
+    menuOptions.style.border = '2px solid #ffffff';
+    menuOptions.style.padding = '10px';
+
+    const exportOption = document.createElement('button');
+    exportOption.textContent = 'Export Bookmarks';
+    exportOption.style.marginBottom = '10px';
+    exportOption.onclick = exportBookmarks;
+
+    const importOption = document.createElement('input');
+    importOption.type = 'file';
+    importOption.accept = '.json';
+    importOption.style.marginBottom = '10px';
+    importOption.onchange = importBookmarks;
+
+    menuOptions.appendChild(exportOption);
+    menuOptions.appendChild(importOption);
+
+    hamburger.onclick = () => {
+        menuOptions.style.display = menuOptions.style.display === 'none' ? 'flex' : 'none';
+    };
+
+    menu.appendChild(hamburger);
+    menu.appendChild(menuOptions);
+    document.body.appendChild(menu);
+};
 window.onload = () => {
     renderShortcuts();
 
