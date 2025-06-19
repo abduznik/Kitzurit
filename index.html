@@ -31,8 +31,13 @@
         display: none;
     }
 
-    .popup button {
-        margin-top: 10px;
+    .close {
+        margin: 15px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffffff;
+        float: center;
+        cursor: pointer;
     }
 
     .overlay {
@@ -76,7 +81,7 @@
 
 <!-- Modal for adding bookmarks -->
 <div id="myModal" class="popup">
-    <span class="close">&times;</span>
+    <span class="close" id="closeModalBtn">&times;</span>
     <div style="display: flex; flex-direction: column; align-items: center;">
         <input type="text" id="bookmarkUrl" placeholder="Enter URL">
         <input type="text" id="bookmarkTitle" placeholder="Enter Title">
@@ -116,16 +121,37 @@ function renderShortcuts() {
     shortcuts.forEach((shortcut, index) => {
         const div = document.createElement('div');
         div.classList.add('shortcut');
-        div.innerHTML = `
-            <span>${shortcut.title}</span>
-        `;
+        div.style.display = 'flex';
+        div.style.alignItems = 'center';
+        div.style.border = '2px solid #ffffff';
+        div.style.padding = '10px';
+        div.style.margin = '10px 0';
+        div.style.backgroundColor = '#333333';
+        div.style.cursor = 'pointer';
+
+        const favicon = document.createElement('img');
+        favicon.src = `https://www.google.com/s2/favicons?domain=${shortcut.url}`;
+        favicon.alt = 'favicon';
+        favicon.style.width = '24px';
+        favicon.style.height = '24px';
+        favicon.style.marginRight = '10px';
+
+        const title = document.createElement('span');
+        title.textContent = shortcut.title;
+        title.style.flexGrow = '1';
+
+        div.appendChild(favicon);
+        div.appendChild(title);
+
         div.onclick = () => {
             window.open(shortcut.url, '_blank');
         };
+
         div.oncontextmenu = (e) => {
             e.preventDefault();
             deleteShortcut(index);
         };
+
         container.appendChild(div);
     });
 }
@@ -182,46 +208,6 @@ function handleSearch(event) {
         search();
     }
 }
-function renderShortcuts() {
-    const container = document.getElementById('container');
-    container.innerHTML = '';
-    shortcuts.forEach((shortcut, index) => {
-        const div = document.createElement('div');
-        div.classList.add('shortcut');
-        div.style.display = 'flex';
-        div.style.alignItems = 'center';
-        div.style.border = '2px solid #ffffff';
-        div.style.padding = '10px';
-        div.style.margin = '10px 0';
-        div.style.backgroundColor = '#333333';
-        div.style.cursor = 'pointer';
-
-        const favicon = document.createElement('img');
-        favicon.src = `https://www.google.com/s2/favicons?domain=${shortcut.url}`;
-        favicon.alt = 'favicon';
-        favicon.style.width = '24px';
-        favicon.style.height = '24px';
-        favicon.style.marginRight = '10px';
-
-        const title = document.createElement('span');
-        title.textContent = shortcut.title;
-        title.style.flexGrow = '1';
-
-        div.appendChild(favicon);
-        div.appendChild(title);
-
-        div.onclick = () => {
-            window.open(shortcut.url, '_blank');
-        };
-
-        div.oncontextmenu = (e) => {
-            e.preventDefault();
-            deleteShortcut(index);
-        };
-
-        container.appendChild(div);
-    });
-}
 
 function exportBookmarks() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(shortcuts));
@@ -258,7 +244,7 @@ window.onload = () => {
         document.getElementById('myModal').style.display = 'block';
     };
 
-    document.getElementsByClassName('close')[0].onclick = () => {
+    document.getElementById('closeModalBtn').onclick = () => {
         closeModal();
     };
 
@@ -269,6 +255,7 @@ window.onload = () => {
         }
     };
 
+    // Create hamburger menu
     const menu = document.createElement('div');
     menu.style.position = 'absolute';
     menu.style.top = '10px';
@@ -288,16 +275,15 @@ window.onload = () => {
     menuOptions.style.backgroundColor = '#333333';
     menuOptions.style.border = '2px solid #ffffff';
     menuOptions.style.padding = '10px';
+    menuOptions.style.marginTop = '10px';
 
     const exportOption = document.createElement('button');
     exportOption.textContent = 'Export Bookmarks';
-    exportOption.style.marginBottom = '10px';
     exportOption.onclick = exportBookmarks;
 
     const importOption = document.createElement('input');
     importOption.type = 'file';
     importOption.accept = '.json';
-    importOption.style.marginBottom = '10px';
     importOption.onchange = importBookmarks;
 
     menuOptions.appendChild(exportOption);
@@ -310,24 +296,6 @@ window.onload = () => {
     menu.appendChild(hamburger);
     menu.appendChild(menuOptions);
     document.body.appendChild(menu);
-};
-window.onload = () => {
-    renderShortcuts();
-
-    document.getElementById('addShortcutBtn').onclick = () => {
-        document.getElementById('myModal').style.display = 'block';
-    };
-
-    document.getElementsByClassName('close')[0].onclick = () => {
-        closeModal();
-    };
-
-    window.onclick = (event) => {
-        const modal = document.getElementById('myModal');
-        if (event.target == modal) {
-            closeModal();
-        }
-    };
 };
 </script>
 </body>
